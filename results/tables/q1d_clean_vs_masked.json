@@ -1,0 +1,22 @@
+{
+  "clean": {
+    "tree_acc": 0.5625,
+    "tree_mean_conf": 0.9895833333333334,
+    "bag_acc": 0.7875,
+    "bag_mean_conf": 0.3975,
+    "tree_conf_correct": 0.9962962962962963,
+    "tree_conf_wrong": 0.980952380952381,
+    "bag_conf_correct": 0.4476190476190476,
+    "bag_conf_wrong": 0.2117647058823529
+  },
+  "masked": {
+    "tree_acc": 0.2125,
+    "tree_mean_conf": 1.0,
+    "bag_acc": 0.5375,
+    "bag_mean_conf": 0.2505,
+    "tree_conf_correct": 1.0,
+    "tree_conf_wrong": 1.0,
+    "bag_conf_correct": 0.30465116279069765,
+    "bag_conf_wrong": 0.18756756756756757
+  }
+}

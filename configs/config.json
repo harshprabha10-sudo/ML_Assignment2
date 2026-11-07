@@ -1,0 +1,27 @@
+{
+  "seed": 26503,
+  "seed_note": "All numeric characters of the roll number, in order. Change this ONLY if your roll-number digits differ, then delete split/ and rerun everything.",
+  "data_home": null,
+  "image_size": 64,
+  "mask_rows_cols": [24, 39],
+  "split_per_identity": {"train": 6, "val": 2, "test": 2},
+
+  "q1": {
+    "max_depth_grid": [2, 4, 8, 16, null],
+    "min_samples_leaf_grid": [1, 2, 4],
+    "bagging_B_grid": [1, 5, 10, 25, 50, 100, 200]
+  },
+  "q2": {
+    "toy_max_depth": 1,
+    "weak_depths": [1, 2, 3, 4],
+    "rounds_grid": [10, 25, 50, 100],
+    "compare_sizes": [25, 50, 100]
+  },
+  "q3": {
+    "n_repetitions": 30,
+    "depths": [2, 8, 16, null],
+    "depths_note": "Shallow (2), intermediate (8, 16) and unlimited (null). The selected depth from Q1(a) is always added if missing. If the selected depth is null (fully grown), no deeper tree exists, so the intermediate depths give the contrast.",
+    "bagged_trees_per_depth": 100
+  },
+  "n_jobs": -1
+}

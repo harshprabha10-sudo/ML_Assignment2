@@ -1,0 +1,37 @@
+python 3.13.18 | numpy 2.5.3 | scikit-learn 1.9.1 | matplotlib 3.11.2 | joblib 1.6.0 | platform Linux-6.18.44-fc-v242-x86_64-with-glibc2.39
+Loaded saved split from split/split.npz (verified against seed 26503).
+Data: X (400, 4096), train 240, val 80, test 80 (+ masked test 80); seed 26503; raw flattened pixels, no dimensionality reduction.
+Frozen settings (no re-tuning): tree {'max_depth': None, 'min_samples_leaf': 4, 'rule': 'max validation accuracy; ties -> shallower depth, then larger min_samples_leaf'}, bagging B=50, boosting {'max_depth': 4, 'rounds': 50, 'rule': 'max clean validation accuracy; ties -> fewer rounds, then shallower'}
+Depths for Q3(b,c): ['2', '8', '16', 'None'] (selected depth = None); 100-tree bagged ensemble at each depth; R = 30 resampled training sets.
+Note: the selected tree is fully grown (max_depth=None), so no deeper tree exists; shallow and intermediate depths provide the contrast.
+Fitted all repetitions in 2973.8s
+Distinct training faces per resampled set: mean 159.6 of 240
+
+=== Q3(a) Selected models, fixed clean test set ===
+tree_selected      bias^2=0.3935 variance=0.6332 test acc over 30 refits = 0.4867 ± 0.0503
+bagging_selected   bias^2=0.5150 variance=0.0334 test acc over 30 refits = 0.7358 ± 0.0398
+boosting_selected  bias^2=0.8751 variance=0.0210 test acc over 30 refits = 0.3387 ± 0.0706
+
+=== Q3(b) Depth sweep: single tree vs 100-tree bagging (clean test) ===
+depth    2           : tree bias^2=1.7989 var=0.0686 acc=0.0663 | bag bias^2=0.9313 var=0.0111 acc=0.1375 | variance removed 0.0575 (83.8%) | acc gain +0.0713
+depth    8           : tree bias^2=1.4516 var=0.2175 acc=0.1654 | bag bias^2=0.8051 var=0.0172 acc=0.4529 | variance removed 0.2004 (92.1%) | acc gain +0.2875
+depth   16           : tree bias^2=0.9849 var=0.4510 acc=0.2821 | bag bias^2=0.6664 var=0.0208 acc=0.6387 | variance removed 0.4302 (95.4%) | acc gain +0.3567
+depth None (selected): tree bias^2=0.3935 var=0.6332 acc=0.4867 | bag bias^2=0.5144 var=0.0255 acc=0.7633 | variance removed 0.6077 (96.0%) | acc gain +0.2767
+
+=== Q3(c) Is the deepest tree where bagging helps most? ===
+depth    2: tree leaves 3.0, mean train samples/leaf 79.33, singleton-leaf frac 0.000; bagged-tree leaves 3.2, samples/leaf 76.85; pairwise disagreement 0.961; var removed 0.0575; acc gain +0.0713
+depth    8: tree leaves 9.3, mean train samples/leaf 26.00, singleton-leaf frac 0.000; bagged-tree leaves 10.6, samples/leaf 22.92; pairwise disagreement 0.924; var removed 0.2004; acc gain +0.2875
+depth   16: tree leaves 17.8, mean train samples/leaf 13.56, singleton-leaf frac 0.000; bagged-tree leaves 21.1, samples/leaf 11.48; pairwise disagreement 0.886; var removed 0.4302; acc gain +0.3567
+depth None: tree leaves 40.0, mean train samples/leaf 6.00, singleton-leaf frac 0.000; bagged-tree leaves 39.3, samples/leaf 6.11; pairwise disagreement 0.818; var removed 0.6077; acc gain +0.2767
+Largest bagging accuracy gain at depth 16 (+0.3567); deepest depth None gain +0.2767. Deepest == best: False
+Gap between best and second-best depth: +0.0692 (std of single-tree acc at best depth 0.0347, over 30 refits)
+
+=== Q3(d) Final table ===
+| Model | Clean test acc | Masked test acc | Drop | Bias² | Variance | Refit clean acc (mean ± sd) |
+|---|---|---|---|---|---|---|
+| Single tree | 56.25% | 21.25% | 35.00 pp | 0.3935 | 0.6332 | 48.67 ± 5.03% |
+| Bagging | 78.75% | 53.75% | 25.00 pp | 0.5150 | 0.0334 | 73.58 ± 3.98% |
+| Boosting (SAMME) | 53.75% | 42.50% | 11.25 pp | 0.8751 | 0.0210 | 33.87 ± 7.06% |
+Lowest refit accuracy s.d.: Bagging; lowest measured variance: Boosting (SAMME); largest masking drop: Single tree; best clean test acc: Bagging. Lowest-variance model has best accuracy: False
+
+Q3 total time 2973.8s

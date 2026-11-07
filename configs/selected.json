@@ -1,0 +1,21 @@
+{
+  "single_tree": {
+    "max_depth": null,
+    "min_samples_leaf": 4,
+    "rule": "max validation accuracy; ties -> shallower depth, then larger min_samples_leaf"
+  },
+  "bagging": {
+    "B": 50,
+    "rule": "max validation accuracy; ties -> smaller B",
+    "tree": {
+      "max_depth": null,
+      "min_samples_leaf": 4,
+      "rule": "max validation accuracy; ties -> shallower depth, then larger min_samples_leaf"
+    }
+  },
+  "boosting": {
+    "max_depth": 4,
+    "rounds": 50,
+    "rule": "max clean validation accuracy; ties -> fewer rounds, then shallower"
+  }
+}

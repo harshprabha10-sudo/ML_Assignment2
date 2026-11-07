@@ -1,0 +1,76 @@
+python 3.13.18 | numpy 2.5.3 | scikit-learn 1.9.1 | matplotlib 3.11.2 | joblib 1.6.0 | platform Linux-6.18.44-fc-v242-x86_64-with-glibc2.39
+Created and saved split to split/split.npz and split/split.json.
+Data: X (400, 4096), train 240, val 80, test 80 (+ masked test 80); seed 26503; raw flattened pixels, no dimensionality reduction.
+
+=== Q1(a) Decision-tree grid (selection on validation accuracy only) ===
+depth=   2 msl=1  train=0.0750 val=0.0750 test=0.0750 leaves=  3 mean/leaf=80.00 singleton=0.000 realdepth=2
+depth=   2 msl=2  train=0.0750 val=0.0750 test=0.0750 leaves=  3 mean/leaf=80.00 singleton=0.000 realdepth=2
+depth=   2 msl=4  train=0.0750 val=0.0750 test=0.0750 leaves=  3 mean/leaf=80.00 singleton=0.000 realdepth=2
+depth=   4 msl=1  train=0.1250 val=0.1125 test=0.1125 leaves=  5 mean/leaf=48.00 singleton=0.000 realdepth=4
+depth=   4 msl=2  train=0.1250 val=0.1125 test=0.1125 leaves=  5 mean/leaf=48.00 singleton=0.000 realdepth=4
+depth=   4 msl=4  train=0.1250 val=0.1125 test=0.1125 leaves=  5 mean/leaf=48.00 singleton=0.000 realdepth=4
+depth=   8 msl=1  train=0.2250 val=0.1875 test=0.2000 leaves=  9 mean/leaf=26.67 singleton=0.000 realdepth=8
+depth=   8 msl=2  train=0.2250 val=0.1875 test=0.2000 leaves=  9 mean/leaf=26.67 singleton=0.000 realdepth=8
+depth=   8 msl=4  train=0.2250 val=0.1875 test=0.2000 leaves=  9 mean/leaf=26.67 singleton=0.000 realdepth=8
+depth=  16 msl=1  train=0.4250 val=0.3250 test=0.3000 leaves= 17 mean/leaf=14.12 singleton=0.000 realdepth=16
+depth=  16 msl=2  train=0.4250 val=0.3250 test=0.3000 leaves= 17 mean/leaf=14.12 singleton=0.000 realdepth=16
+depth=  16 msl=4  train=0.4250 val=0.3250 test=0.3000 leaves= 17 mean/leaf=14.12 singleton=0.000 realdepth=16
+depth=None msl=1  train=1.0000 val=0.5875 test=0.5625 leaves= 42 mean/leaf=5.71 singleton=0.048 realdepth=36
+depth=None msl=2  train=0.9917 val=0.5875 test=0.5625 leaves= 42 mean/leaf=5.71 singleton=0.000 realdepth=36
+depth=None msl=4  train=0.9917 val=0.6125 test=0.5625 leaves= 40 mean/leaf=6.00 singleton=0.000 realdepth=35
+
+Frozen tree setting: max_depth=None, min_samples_leaf=4
+  train=0.9917 val=0.6125 test=0.5625 leaves=40 mean samples/leaf=6.000 fraction singleton leaves=0.000
+Depth trend (at the frozen min_samples_leaf):
+  depth    2: train 0.075, val 0.075, leaves 3, mean/leaf 80.00, singleton 0.00
+  depth    4: train 0.125, val 0.113, leaves 5, mean/leaf 48.00, singleton 0.00
+  depth    8: train 0.225, val 0.188, leaves 9, mean/leaf 26.67, singleton 0.00
+  depth   16: train 0.425, val 0.325, leaves 17, mean/leaf 14.12, singleton 0.00
+  depth None: train 0.992, val 0.613, leaves 40, mean/leaf 6.00, singleton 0.00
+
+=== Q1(b) Bagging from scratch (bootstrap size = n_train, frozen tree setting) ===
+Fitted 200 bootstrap trees in 87.2s (ensemble of size B = first B trees).
+Theoretical expected distinct examples per bootstrap: n(1-(1-1/n)^n) = 151.89 (0.6329 of n; limit 1-1/e = 0.6321)
+B=  1: train=0.5917 val=0.4625 test=0.3750 distinct=153.00±0.00 (theory 151.89)
+B=  5: train=0.9375 val=0.6125 test=0.5500 distinct=151.80±2.04 (theory 151.89)
+B= 10: train=0.9958 val=0.6500 test=0.7000 distinct=153.90±3.45 (theory 151.89)
+B= 25: train=1.0000 val=0.7875 test=0.7750 distinct=152.16±4.03 (theory 151.89)
+B= 50: train=1.0000 val=0.8500 test=0.7875 distinct=151.74±3.78 (theory 151.89)
+B=100: train=1.0000 val=0.8250 test=0.8125 distinct=151.90±4.63 (theory 151.89)
+B=200: train=1.0000 val=0.8250 test=0.8375 distinct=151.66±4.91 (theory 151.89)
+
+=== Q1(c) OOB accuracy, pairwise disagreement and vote margin (validation set) ===
+B=  1: OOB acc=0.1609 (on 87/240 pts)  disagreement=nan  vote margin=1.0000  val acc=0.4625
+B=  5: OOB acc=0.3196 (on 219/240 pts)  disagreement=0.7863  vote margin=0.2450  val acc=0.6125
+B= 10: OOB acc=0.3872 (on 235/240 pts)  disagreement=0.7661  vote margin=0.2850  val acc=0.6500
+B= 25: OOB acc=0.5208 (on 240/240 pts)  disagreement=0.7805  vote margin=0.2735  val acc=0.7875
+B= 50: OOB acc=0.6125 (on 240/240 pts)  disagreement=0.7921  vote margin=0.2638  val acc=0.8500
+B=100: OOB acc=0.7125 (on 240/240 pts)  disagreement=0.7859  vote margin=0.2727  val acc=0.8250
+B=200: OOB acc=0.7292 (on 240/240 pts)  disagreement=0.7878  vote margin=0.2731  val acc=0.8250
+Selected ensemble size B = 50
+
+=== Q1(d) Frozen tree vs final bagged model on clean and masked test sets ===
+[clean] tree acc=0.5625 mean conf (max leaf prob)=0.9896 | bagging acc=0.7875 mean conf (winning vote fraction)=0.3975
+         conf when correct/wrong: tree 0.9962962962962963/0.980952380952381  bag 0.4476190476190476/0.2117647058823529
+[masked] tree acc=0.2125 mean conf (max leaf prob)=1.0000 | bagging acc=0.5375 mean conf (winning vote fraction)=0.2505
+         conf when correct/wrong: tree 1.0/1.0  bag 0.30465116279069765/0.18756756756756757
+
+clean_bag_corrects_tree:
+  test#37 (dataset idx 184) true=18 tree_pred=35 (p=1.00) bag_pred=18 votes[true]=31/50 top3 votes=18:31;2:4;22:3
+  test#9 (dataset idx 41) true=4 tree_pred=37 (p=1.00) bag_pred=4 votes[true]=29/50 top3 votes=4:29;37:6;22:4
+
+clean_both_wrong:
+  test#50 (dataset idx 256) true=25 tree_pred=15 (p=1.00) bag_pred=15 votes[true]=3/50 top3 votes=15:18;22:5;2:4
+  test#30 (dataset idx 155) true=15 tree_pred=6 (p=1.00) bag_pred=23 votes[true]=3/50 top3 votes=23:17;16:4;15:3
+
+masked_bag_corrects_tree:
+  test#66 (dataset idx 338) true=33 tree_pred=35 (p=1.00) bag_pred=33 votes[true]=25/50 top3 votes=33:25;13:7;30:3
+  test#52 (dataset idx 264) true=26 tree_pred=35 (p=1.00) bag_pred=26 votes[true]=20/50 top3 votes=26:20;33:5;30:4
+
+masked_both_wrong:
+  test#13 (dataset idx 65) true=6 tree_pred=35 (p=1.00) bag_pred=35 votes[true]=9/50 top3 votes=35:16;6:9;13:5
+  test#50 (dataset idx 256) true=25 tree_pred=15 (p=1.00) bag_pred=15 votes[true]=3/50 top3 votes=15:13;13:7;35:6
+
+Clean test: bagging fixes 19 tree errors and breaks 1 tree-correct faces.
+
+Q1 total time 97.5s

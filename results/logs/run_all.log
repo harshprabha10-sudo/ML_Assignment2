@@ -1,0 +1,286 @@
+run_all started 2026-11-06T13:58:59Z
+python 3.13.18 | numpy 2.5.3 | scikit-learn 1.9.1 | matplotlib 3.11.2 | joblib 1.6.0 | platform Linux-6.18.44-fc-v242-x86_64-with-glibc2.39
+Created and saved split to split/split.npz and split/split.json.
+Data: X (400, 4096), train 240, val 80, test 80 (+ masked test 80); seed 26503; raw flattened pixels, no dimensionality reduction.
+
+=== Q1(a) Decision-tree grid (selection on validation accuracy only) ===
+depth=   2 msl=1  train=0.0750 val=0.0750 test=0.0750 leaves=  3 mean/leaf=80.00 singleton=0.000 realdepth=2
+depth=   2 msl=2  train=0.0750 val=0.0750 test=0.0750 leaves=  3 mean/leaf=80.00 singleton=0.000 realdepth=2
+depth=   2 msl=4  train=0.0750 val=0.0750 test=0.0750 leaves=  3 mean/leaf=80.00 singleton=0.000 realdepth=2
+depth=   4 msl=1  train=0.1250 val=0.1125 test=0.1125 leaves=  5 mean/leaf=48.00 singleton=0.000 realdepth=4
+depth=   4 msl=2  train=0.1250 val=0.1125 test=0.1125 leaves=  5 mean/leaf=48.00 singleton=0.000 realdepth=4
+depth=   4 msl=4  train=0.1250 val=0.1125 test=0.1125 leaves=  5 mean/leaf=48.00 singleton=0.000 realdepth=4
+depth=   8 msl=1  train=0.2250 val=0.1875 test=0.2000 leaves=  9 mean/leaf=26.67 singleton=0.000 realdepth=8
+depth=   8 msl=2  train=0.2250 val=0.1875 test=0.2000 leaves=  9 mean/leaf=26.67 singleton=0.000 realdepth=8
+depth=   8 msl=4  train=0.2250 val=0.1875 test=0.2000 leaves=  9 mean/leaf=26.67 singleton=0.000 realdepth=8
+depth=  16 msl=1  train=0.4250 val=0.3250 test=0.3000 leaves= 17 mean/leaf=14.12 singleton=0.000 realdepth=16
+depth=  16 msl=2  train=0.4250 val=0.3250 test=0.3000 leaves= 17 mean/leaf=14.12 singleton=0.000 realdepth=16
+depth=  16 msl=4  train=0.4250 val=0.3250 test=0.3000 leaves= 17 mean/leaf=14.12 singleton=0.000 realdepth=16
+depth=None msl=1  train=1.0000 val=0.5875 test=0.5625 leaves= 42 mean/leaf=5.71 singleton=0.048 realdepth=36
+depth=None msl=2  train=0.9917 val=0.5875 test=0.5625 leaves= 42 mean/leaf=5.71 singleton=0.000 realdepth=36
+depth=None msl=4  train=0.9917 val=0.6125 test=0.5625 leaves= 40 mean/leaf=6.00 singleton=0.000 realdepth=35
+
+Frozen tree setting: max_depth=None, min_samples_leaf=4
+  train=0.9917 val=0.6125 test=0.5625 leaves=40 mean samples/leaf=6.000 fraction singleton leaves=0.000
+Depth trend (at the frozen min_samples_leaf):
+  depth    2: train 0.075, val 0.075, leaves 3, mean/leaf 80.00, singleton 0.00
+  depth    4: train 0.125, val 0.113, leaves 5, mean/leaf 48.00, singleton 0.00
+  depth    8: train 0.225, val 0.188, leaves 9, mean/leaf 26.67, singleton 0.00
+  depth   16: train 0.425, val 0.325, leaves 17, mean/leaf 14.12, singleton 0.00
+  depth None: train 0.992, val 0.613, leaves 40, mean/leaf 6.00, singleton 0.00
+
+=== Q1(b) Bagging from scratch (bootstrap size = n_train, frozen tree setting) ===
+Fitted 200 bootstrap trees in 87.2s (ensemble of size B = first B trees).
+Theoretical expected distinct examples per bootstrap: n(1-(1-1/n)^n) = 151.89 (0.6329 of n; limit 1-1/e = 0.6321)
+B=  1: train=0.5917 val=0.4625 test=0.3750 distinct=153.00±0.00 (theory 151.89)
+B=  5: train=0.9375 val=0.6125 test=0.5500 distinct=151.80±2.04 (theory 151.89)
+B= 10: train=0.9958 val=0.6500 test=0.7000 distinct=153.90±3.45 (theory 151.89)
+B= 25: train=1.0000 val=0.7875 test=0.7750 distinct=152.16±4.03 (theory 151.89)
+B= 50: train=1.0000 val=0.8500 test=0.7875 distinct=151.74±3.78 (theory 151.89)
+B=100: train=1.0000 val=0.8250 test=0.8125 distinct=151.90±4.63 (theory 151.89)
+B=200: train=1.0000 val=0.8250 test=0.8375 distinct=151.66±4.91 (theory 151.89)
+
+=== Q1(c) OOB accuracy, pairwise disagreement and vote margin (validation set) ===
+B=  1: OOB acc=0.1609 (on 87/240 pts)  disagreement=nan  vote margin=1.0000  val acc=0.4625
+B=  5: OOB acc=0.3196 (on 219/240 pts)  disagreement=0.7863  vote margin=0.2450  val acc=0.6125
+B= 10: OOB acc=0.3872 (on 235/240 pts)  disagreement=0.7661  vote margin=0.2850  val acc=0.6500
+B= 25: OOB acc=0.5208 (on 240/240 pts)  disagreement=0.7805  vote margin=0.2735  val acc=0.7875
+B= 50: OOB acc=0.6125 (on 240/240 pts)  disagreement=0.7921  vote margin=0.2638  val acc=0.8500
+B=100: OOB acc=0.7125 (on 240/240 pts)  disagreement=0.7859  vote margin=0.2727  val acc=0.8250
+B=200: OOB acc=0.7292 (on 240/240 pts)  disagreement=0.7878  vote margin=0.2731  val acc=0.8250
+Selected ensemble size B = 50
+
+=== Q1(d) Frozen tree vs final bagged model on clean and masked test sets ===
+[clean] tree acc=0.5625 mean conf (max leaf prob)=0.9896 | bagging acc=0.7875 mean conf (winning vote fraction)=0.3975
+         conf when correct/wrong: tree 0.9962962962962963/0.980952380952381  bag 0.4476190476190476/0.2117647058823529
+[masked] tree acc=0.2125 mean conf (max leaf prob)=1.0000 | bagging acc=0.5375 mean conf (winning vote fraction)=0.2505
+         conf when correct/wrong: tree 1.0/1.0  bag 0.30465116279069765/0.18756756756756757
+
+clean_bag_corrects_tree:
+  test#37 (dataset idx 184) true=18 tree_pred=35 (p=1.00) bag_pred=18 votes[true]=31/50 top3 votes=18:31;2:4;22:3
+  test#9 (dataset idx 41) true=4 tree_pred=37 (p=1.00) bag_pred=4 votes[true]=29/50 top3 votes=4:29;37:6;22:4
+
+clean_both_wrong:
+  test#50 (dataset idx 256) true=25 tree_pred=15 (p=1.00) bag_pred=15 votes[true]=3/50 top3 votes=15:18;22:5;2:4
+  test#30 (dataset idx 155) true=15 tree_pred=6 (p=1.00) bag_pred=23 votes[true]=3/50 top3 votes=23:17;16:4;15:3
+
+masked_bag_corrects_tree:
+  test#66 (dataset idx 338) true=33 tree_pred=35 (p=1.00) bag_pred=33 votes[true]=25/50 top3 votes=33:25;13:7;30:3
+  test#52 (dataset idx 264) true=26 tree_pred=35 (p=1.00) bag_pred=26 votes[true]=20/50 top3 votes=26:20;33:5;30:4
+
+masked_both_wrong:
+  test#13 (dataset idx 65) true=6 tree_pred=35 (p=1.00) bag_pred=35 votes[true]=9/50 top3 votes=35:16;6:9;13:5
+  test#50 (dataset idx 256) true=25 tree_pred=15 (p=1.00) bag_pred=15 votes[true]=3/50 top3 votes=15:13;13:7;35:6
+
+Clean test: bagging fixes 19 tree errors and breaks 1 tree-correct faces.
+
+Q1 total time 97.5s
+python 3.13.18 | numpy 2.5.3 | scikit-learn 1.9.1 | matplotlib 3.11.2 | joblib 1.6.0 | platform Linux-6.18.44-fc-v242-x86_64-with-glibc2.39
+Loaded saved split from split/split.npz (verified against seed 26503).
+Data: X (400, 4096), train 240, val 80, test 80 (+ masked test 80); seed 26503; raw flattened pixels, no dimensionality reduction.
+=== Q2(a) Toy 3-class SAMME example (9 samples, 1 feature, depth-1 stump) ===
+
+-- Round 1 --
+ i  x  y  w_before  h(x)  miss  w*exp(alpha*miss)  w_after(normalised)
+ 0  1  0  0.11111     0     0      0.11111        0.05556
+ 1  2  0  0.11111     0     0      0.11111        0.05556
+ 2  3  0  0.11111     0     0      0.11111        0.05556
+ 3  4  1  0.11111     1     0      0.11111        0.05556
+ 4  5  1  0.11111     1     0      0.11111        0.05556
+ 5  6  1  0.11111     1     0      0.11111        0.05556
+ 6  7  2  0.11111     1     1      0.44444        0.22222
+ 7  8  2  0.11111     1     1      0.44444        0.22222
+ 8  9  2  0.11111     1     1      0.44444        0.22222
+weighted error e_t = sum(w*miss)/sum(w) = 0.33333   (random-guess threshold 1-1/K = 0.6667)
+alpha_t = log((1-e)/e) + log(K-1) = log(2.0000) + log(2) = 1.38629
+sum of unnormalised weights = 2.00000; weights after normalisation sum to 1.00000
+
+-- Round 2 --
+ i  x  y  w_before  h(x)  miss  w*exp(alpha*miss)  w_after(normalised)
+ 0  1  0  0.05556     0     0      0.05556        0.02222
+ 1  2  0  0.05556     0     0      0.05556        0.02222
+ 2  3  0  0.05556     0     0      0.05556        0.02222
+ 3  4  1  0.05556     0     1      0.55556        0.22222
+ 4  5  1  0.05556     0     1      0.55556        0.22222
+ 5  6  1  0.05556     0     1      0.55556        0.22222
+ 6  7  2  0.22222     2     0      0.22222        0.08889
+ 7  8  2  0.22222     2     0      0.22222        0.08889
+ 8  9  2  0.22222     2     0      0.22222        0.08889
+weighted error e_t = sum(w*miss)/sum(w) = 0.16667   (random-guess threshold 1-1/K = 0.6667)
+alpha_t = log((1-e)/e) + log(K-1) = log(5.0000) + log(2) = 2.30259
+sum of unnormalised weights = 2.50000; weights after normalisation sum to 1.00000
+
+After 2 rounds, normalised vote q(x) and prediction:
+  x=1 y=0 q=[1. 0. 0.] pred=0
+  x=2 y=0 q=[1. 0. 0.] pred=0
+  x=3 y=0 q=[1. 0. 0.] pred=0
+  x=4 y=1 q=[0.624 0.376 0.   ] pred=0
+  x=5 y=1 q=[0.624 0.376 0.   ] pred=0
+  x=6 y=1 q=[0.624 0.376 0.   ] pred=0
+  x=7 y=2 q=[0.    0.376 0.624] pred=2
+  x=8 y=2 q=[0.    0.376 0.624] pred=2
+  x=9 y=2 q=[0.    0.376 0.624] pred=2
+The face-data experiments below use exactly this SAMME class and update rule (src/samme.py).
+
+=== Q2(b) SAMME on Olivetti: depth x rounds grid (selection on clean validation accuracy) ===
+depth 1: 100 learners kept (completed all rounds)
+  depth=1 T= 10: train=0.0500 val=0.0500 test=0.0500
+  depth=1 T= 25: train=0.0917 val=0.0250 test=0.0625
+  depth=1 T= 50: train=0.1000 val=0.0625 test=0.0625
+  depth=1 T=100: train=0.1417 val=0.0750 test=0.0625
+depth 2: 100 learners kept (completed all rounds)
+  depth=2 T= 10: train=0.1125 val=0.1000 test=0.1000
+  depth=2 T= 25: train=0.1583 val=0.1000 test=0.1125
+  depth=2 T= 50: train=0.3125 val=0.1500 test=0.1125
+  depth=2 T=100: train=0.4333 val=0.2500 test=0.1750
+depth 3: 100 learners kept (completed all rounds)
+  depth=3 T= 10: train=0.2875 val=0.1875 test=0.2125
+  depth=3 T= 25: train=0.4000 val=0.2375 test=0.2375
+  depth=3 T= 50: train=0.7458 val=0.4125 test=0.3875
+  depth=3 T=100: train=0.8375 val=0.4000 test=0.3375
+depth 4: 100 learners kept (completed all rounds)
+  depth=4 T= 10: train=0.2917 val=0.1750 test=0.2000
+  depth=4 T= 25: train=0.5042 val=0.3000 test=0.3000
+  depth=4 T= 50: train=0.9750 val=0.5250 test=0.5375
+  depth=4 T=100: train=0.9833 val=0.5125 test=0.6375
+Selected boosting: weak-learner depth 4, 50 rounds (val 0.5250, test 0.5375)
+Selected model, per-round: t, weighted error, alpha, max sample weight, weight of 10 heaviest
+  t=  1 err=0.8750 alpha=1.7177 max_w=0.0046 top10_w=0.0464
+  t=  2 err=0.8607 alpha=1.8423 max_w=0.0053 top10_w=0.0526
+  t=  3 err=0.8422 alpha=1.9887 max_w=0.0061 top10_w=0.0609
+  t=  4 err=0.8123 alpha=2.1987 max_w=0.0073 top10_w=0.0731
+  t=  5 err=0.7673 alpha=2.4705 max_w=0.0093 top10_w=0.0929
+  t= 10 err=0.6316 alpha=3.1243 max_w=0.0260 top10_w=0.2003
+  t= 20 err=0.6634 alpha=2.9853 max_w=0.0682 top10_w=0.2957
+  t= 30 err=0.6190 alpha=3.1784 max_w=0.0574 top10_w=0.2773
+  t= 40 err=0.6683 alpha=2.9631 max_w=0.0441 top10_w=0.2550
+  t= 50 err=0.6452 alpha=3.0657 max_w=0.0601 top10_w=0.3511
+
+=== Q2(c) Boosting vs bagging with 25 / 50 / 100 learners (fresh fits, single core, timed) ===
+bagging  n= 25: train=1.0000 val=0.7625 test=0.7875 fit time=20.80s
+boosting n= 25: train=0.5042 val=0.3000 test=0.3000 fit time=6.85s
+bagging  n= 50: train=1.0000 val=0.8250 test=0.8000 fit time=42.27s
+boosting n= 50: train=0.9750 val=0.5250 test=0.5375 fit time=13.16s
+bagging  n=100: train=1.0000 val=0.8375 test=0.8125 fit time=83.50s
+boosting n=100: train=0.9833 val=0.5125 test=0.6375 fit time=25.45s
+
+Heaviest training face: train#228 (dataset idx 389), identity 38; max weight 0.0774 = 18.6x uniform 1/n.
+  misclassified by 43/50 weak learners; each learner outputs on average 8.1 of 40 classes on the training set.
+  round: weight-before, h_t(x), miss, alpha
+   t=  1 w=0.00417 pred= 0 miss=1 alpha=1.718
+   t=  2 w=0.00464 pred=38 miss=0 alpha=1.842
+   t=  3 w=0.00083 pred= 2 miss=1 alpha=1.989
+   t=  4 w=0.00096 pred= 3 miss=1 alpha=2.199
+   t=  5 w=0.00116 pred= 4 miss=1 alpha=2.471
+   t=  6 w=0.00147 pred=12 miss=1 alpha=3.019
+   t=  7 w=0.00219 pred=36 miss=1 alpha=3.798
+   t=  8 w=0.00457 pred=29 miss=1 alpha=4.177
+   t=  9 w=0.01191 pred= 0 miss=1 alpha=2.867
+   t= 10 w=0.01685 pred= 3 miss=1 alpha=3.124
+   t= 11 w=0.02601 pred= 8 miss=1 alpha=3.210
+   t= 12 w=0.04147 pred=12 miss=1 alpha=3.226
+   t= 13 w=0.06653 pred=38 miss=0 alpha=3.101
+   t= 14 w=0.00458 pred=16 miss=1 alpha=3.370
+   t= 15 w=0.00780 pred=20 miss=1 alpha=3.440
+   t= 20 w=0.06102 pred=38 miss=0 alpha=2.985
+   t= 28 w=0.05231 pred=38 miss=0 alpha=2.900
+   t= 30 w=0.00587 pred=36 miss=1 alpha=3.178
+   t= 36 w=0.07740 pred=38 miss=0 alpha=3.025
+   t= 38 w=0.00812 pred=38 miss=0 alpha=3.126
+   t= 40 w=0.00082 pred= 3 miss=1 alpha=2.963
+   t= 49 w=0.03102 pred=38 miss=0 alpha=2.852
+   t= 50 w=0.00252 pred=13 miss=1 alpha=3.066
+  learner predictions for this face (class: count): {0: 4, 1: 3, 2: 2, 3: 6, 4: 2, 8: 2, 12: 3, 13: 2, 14: 2, 16: 2, 17: 1, 20: 4, 22: 2, 24: 1, 29: 1, 34: 1, 35: 1, 36: 2, 38: 7, 39: 2}
+  final ensemble prediction 38 with q_true=0.134
+
+=== Q2(d) Frozen models on clean and masked test sets ===
+[clean] tree acc=0.5625 (mean max prob 0.990) | bagging B=50 acc=0.7875 (mean winning vote 0.398) | boosting acc=0.5375 (mean winning q 0.129)
+[masked] tree acc=0.2125 (mean max prob 1.000) | bagging B=50 acc=0.5375 (mean winning vote 0.251) | boosting acc=0.4250 (mean winning q 0.124)
+Fraction of split nodes testing masked pixels: bagging trees 0.079, boosting (alpha-weighted) 0.071; masked area = 0.0625 of the image
+Faces where bagging and boosting respond differently to masking: 13 candidates (6 bagging-survives, 7 boosting-survives)
+
+Example face: test#9 (dataset idx 41), identity 4 — boosting survives masking, bagging breaks
+   test_pos: 9
+   dataset_index: 41
+   true: 4
+   kind: boosting survives masking, bagging breaks
+   bag_vote_true_clean: 0.58
+   bag_vote_true_masked: 0.14
+   bag_pred_masked: 30
+   bag_win_vote_masked: 0.2
+   bag_distinct_preds_clean: 12
+   bag_distinct_preds_masked: 13
+   bag_frac_trees_changed: 0.72
+   bag_frac_paths_through_mask: 0.8
+   boost_q_true_clean: 0.13940786590649085
+   boost_q_true_masked: 0.13940786590649085
+   boost_pred_masked: 4
+   boost_win_q_masked: 0.13940786590649085
+   boost_alpha_frac_changed: 0.08844403621646897
+   boost_alpha_frac_paths_through_mask: 0.1869881343153827
+   boost_train_weight_on_true_identity: 0.011067722812450928
+
+Example face: test#14 (dataset idx 74), identity 7 — bagging survives masking, boosting breaks
+   test_pos: 14
+   dataset_index: 74
+   true: 7
+   kind: bagging survives masking, boosting breaks
+   bag_vote_true_clean: 0.52
+   bag_vote_true_masked: 0.26
+   bag_pred_masked: 7
+   bag_win_vote_masked: 0.26
+   bag_distinct_preds_clean: 12
+   bag_distinct_preds_masked: 16
+   bag_frac_trees_changed: 0.52
+   bag_frac_paths_through_mask: 0.52
+   boost_q_true_clean: 0.13525015052929173
+   boost_q_true_masked: 0.11251250900251829
+   boost_pred_masked: 3
+   boost_win_q_masked: 0.114411151924018
+   boost_alpha_frac_changed: 0.14961456457784
+   boost_alpha_frac_paths_through_mask: 0.20972577584215613
+   boost_train_weight_on_true_identity: 0.005164748686941047
+
+Q2 total time 231.2s
+python 3.13.18 | numpy 2.5.3 | scikit-learn 1.9.1 | matplotlib 3.11.2 | joblib 1.6.0 | platform Linux-6.18.44-fc-v242-x86_64-with-glibc2.39
+Loaded saved split from split/split.npz (verified against seed 26503).
+Data: X (400, 4096), train 240, val 80, test 80 (+ masked test 80); seed 26503; raw flattened pixels, no dimensionality reduction.
+Frozen settings (no re-tuning): tree {'max_depth': None, 'min_samples_leaf': 4, 'rule': 'max validation accuracy; ties -> shallower depth, then larger min_samples_leaf'}, bagging B=50, boosting {'max_depth': 4, 'rounds': 50, 'rule': 'max clean validation accuracy; ties -> fewer rounds, then shallower'}
+Depths for Q3(b,c): ['2', '8', '16', 'None'] (selected depth = None); 100-tree bagged ensemble at each depth; R = 30 resampled training sets.
+Note: the selected tree is fully grown (max_depth=None), so no deeper tree exists; shallow and intermediate depths provide the contrast.
+[Parallel(n_jobs=-1)]: Using backend LokyBackend with 2 concurrent workers.
+[Parallel(n_jobs=-1)]: Done  14 tasks      | elapsed: 23.2min
+[Parallel(n_jobs=-1)]: Done  30 out of  30 | elapsed: 49.6min finished
+Fitted all repetitions in 2973.8s
+Distinct training faces per resampled set: mean 159.6 of 240
+
+=== Q3(a) Selected models, fixed clean test set ===
+tree_selected      bias^2=0.3935 variance=0.6332 test acc over 30 refits = 0.4867 ± 0.0503
+bagging_selected   bias^2=0.5150 variance=0.0334 test acc over 30 refits = 0.7358 ± 0.0398
+boosting_selected  bias^2=0.8751 variance=0.0210 test acc over 30 refits = 0.3387 ± 0.0706
+
+=== Q3(b) Depth sweep: single tree vs 100-tree bagging (clean test) ===
+depth    2           : tree bias^2=1.7989 var=0.0686 acc=0.0663 | bag bias^2=0.9313 var=0.0111 acc=0.1375 | variance removed 0.0575 (83.8%) | acc gain +0.0713
+depth    8           : tree bias^2=1.4516 var=0.2175 acc=0.1654 | bag bias^2=0.8051 var=0.0172 acc=0.4529 | variance removed 0.2004 (92.1%) | acc gain +0.2875
+depth   16           : tree bias^2=0.9849 var=0.4510 acc=0.2821 | bag bias^2=0.6664 var=0.0208 acc=0.6387 | variance removed 0.4302 (95.4%) | acc gain +0.3567
+depth None (selected): tree bias^2=0.3935 var=0.6332 acc=0.4867 | bag bias^2=0.5144 var=0.0255 acc=0.7633 | variance removed 0.6077 (96.0%) | acc gain +0.2767
+
+=== Q3(c) Is the deepest tree where bagging helps most? ===
+depth    2: tree leaves 3.0, mean train samples/leaf 79.33, singleton-leaf frac 0.000; bagged-tree leaves 3.2, samples/leaf 76.85; pairwise disagreement 0.961; var removed 0.0575; acc gain +0.0713
+depth    8: tree leaves 9.3, mean train samples/leaf 26.00, singleton-leaf frac 0.000; bagged-tree leaves 10.6, samples/leaf 22.92; pairwise disagreement 0.924; var removed 0.2004; acc gain +0.2875
+depth   16: tree leaves 17.8, mean train samples/leaf 13.56, singleton-leaf frac 0.000; bagged-tree leaves 21.1, samples/leaf 11.48; pairwise disagreement 0.886; var removed 0.4302; acc gain +0.3567
+depth None: tree leaves 40.0, mean train samples/leaf 6.00, singleton-leaf frac 0.000; bagged-tree leaves 39.3, samples/leaf 6.11; pairwise disagreement 0.818; var removed 0.6077; acc gain +0.2767
+Largest bagging accuracy gain at depth 16 (+0.3567); deepest depth None gain +0.2767. Deepest == best: False
+Gap between best and second-best depth: +0.0692 (std of single-tree acc at best depth 0.0347, over 30 refits)
+
+=== Q3(d) Final table ===
+| Model | Clean test acc | Masked test acc | Drop | Bias² | Variance | Refit clean acc (mean ± sd) |
+|---|---|---|---|---|---|---|
+| Single tree | 56.25% | 21.25% | 35.00 pp | 0.3935 | 0.6332 | 48.67 ± 5.03% |
+| Bagging | 78.75% | 53.75% | 25.00 pp | 0.5150 | 0.0334 | 73.58 ± 3.98% |
+| Boosting (SAMME) | 53.75% | 42.50% | 11.25 pp | 0.8751 | 0.0210 | 33.87 ± 7.06% |
+Lowest refit accuracy s.d.: Bagging; lowest measured variance: Boosting (SAMME); largest masking drop: Single tree; best clean test acc: Bagging. Lowest-variance model has best accuracy: False
+
+Q3 total time 2973.8s
+Figures written to /home/claude/ML-Assignment-2/results/figures
+run_all finished in 3312s

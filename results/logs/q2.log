@@ -1,0 +1,167 @@
+python 3.13.18 | numpy 2.5.3 | scikit-learn 1.9.1 | matplotlib 3.11.2 | joblib 1.6.0 | platform Linux-6.18.44-fc-v242-x86_64-with-glibc2.39
+Loaded saved split from split/split.npz (verified against seed 26503).
+Data: X (400, 4096), train 240, val 80, test 80 (+ masked test 80); seed 26503; raw flattened pixels, no dimensionality reduction.
+=== Q2(a) Toy 3-class SAMME example (9 samples, 1 feature, depth-1 stump) ===
+
+-- Round 1 --
+ i  x  y  w_before  h(x)  miss  w*exp(alpha*miss)  w_after(normalised)
+ 0  1  0  0.11111     0     0      0.11111        0.05556
+ 1  2  0  0.11111     0     0      0.11111        0.05556
+ 2  3  0  0.11111     0     0      0.11111        0.05556
+ 3  4  1  0.11111     1     0      0.11111        0.05556
+ 4  5  1  0.11111     1     0      0.11111        0.05556
+ 5  6  1  0.11111     1     0      0.11111        0.05556
+ 6  7  2  0.11111     1     1      0.44444        0.22222
+ 7  8  2  0.11111     1     1      0.44444        0.22222
+ 8  9  2  0.11111     1     1      0.44444        0.22222
+weighted error e_t = sum(w*miss)/sum(w) = 0.33333   (random-guess threshold 1-1/K = 0.6667)
+alpha_t = log((1-e)/e) + log(K-1) = log(2.0000) + log(2) = 1.38629
+sum of unnormalised weights = 2.00000; weights after normalisation sum to 1.00000
+
+-- Round 2 --
+ i  x  y  w_before  h(x)  miss  w*exp(alpha*miss)  w_after(normalised)
+ 0  1  0  0.05556     0     0      0.05556        0.02222
+ 1  2  0  0.05556     0     0      0.05556        0.02222
+ 2  3  0  0.05556     0     0      0.05556        0.02222
+ 3  4  1  0.05556     0     1      0.55556        0.22222
+ 4  5  1  0.05556     0     1      0.55556        0.22222
+ 5  6  1  0.05556     0     1      0.55556        0.22222
+ 6  7  2  0.22222     2     0      0.22222        0.08889
+ 7  8  2  0.22222     2     0      0.22222        0.08889
+ 8  9  2  0.22222     2     0      0.22222        0.08889
+weighted error e_t = sum(w*miss)/sum(w) = 0.16667   (random-guess threshold 1-1/K = 0.6667)
+alpha_t = log((1-e)/e) + log(K-1) = log(5.0000) + log(2) = 2.30259
+sum of unnormalised weights = 2.50000; weights after normalisation sum to 1.00000
+
+After 2 rounds, normalised vote q(x) and prediction:
+  x=1 y=0 q=[1. 0. 0.] pred=0
+  x=2 y=0 q=[1. 0. 0.] pred=0
+  x=3 y=0 q=[1. 0. 0.] pred=0
+  x=4 y=1 q=[0.624 0.376 0.   ] pred=0
+  x=5 y=1 q=[0.624 0.376 0.   ] pred=0
+  x=6 y=1 q=[0.624 0.376 0.   ] pred=0
+  x=7 y=2 q=[0.    0.376 0.624] pred=2
+  x=8 y=2 q=[0.    0.376 0.624] pred=2
+  x=9 y=2 q=[0.    0.376 0.624] pred=2
+The face-data experiments below use exactly this SAMME class and update rule (src/samme.py).
+
+=== Q2(b) SAMME on Olivetti: depth x rounds grid (selection on clean validation accuracy) ===
+depth 1: 100 learners kept (completed all rounds)
+  depth=1 T= 10: train=0.0500 val=0.0500 test=0.0500
+  depth=1 T= 25: train=0.0917 val=0.0250 test=0.0625
+  depth=1 T= 50: train=0.1000 val=0.0625 test=0.0625
+  depth=1 T=100: train=0.1417 val=0.0750 test=0.0625
+depth 2: 100 learners kept (completed all rounds)
+  depth=2 T= 10: train=0.1125 val=0.1000 test=0.1000
+  depth=2 T= 25: train=0.1583 val=0.1000 test=0.1125
+  depth=2 T= 50: train=0.3125 val=0.1500 test=0.1125
+  depth=2 T=100: train=0.4333 val=0.2500 test=0.1750
+depth 3: 100 learners kept (completed all rounds)
+  depth=3 T= 10: train=0.2875 val=0.1875 test=0.2125
+  depth=3 T= 25: train=0.4000 val=0.2375 test=0.2375
+  depth=3 T= 50: train=0.7458 val=0.4125 test=0.3875
+  depth=3 T=100: train=0.8375 val=0.4000 test=0.3375
+depth 4: 100 learners kept (completed all rounds)
+  depth=4 T= 10: train=0.2917 val=0.1750 test=0.2000
+  depth=4 T= 25: train=0.5042 val=0.3000 test=0.3000
+  depth=4 T= 50: train=0.9750 val=0.5250 test=0.5375
+  depth=4 T=100: train=0.9833 val=0.5125 test=0.6375
+Selected boosting: weak-learner depth 4, 50 rounds (val 0.5250, test 0.5375)
+Selected model, per-round: t, weighted error, alpha, max sample weight, weight of 10 heaviest
+  t=  1 err=0.8750 alpha=1.7177 max_w=0.0046 top10_w=0.0464
+  t=  2 err=0.8607 alpha=1.8423 max_w=0.0053 top10_w=0.0526
+  t=  3 err=0.8422 alpha=1.9887 max_w=0.0061 top10_w=0.0609
+  t=  4 err=0.8123 alpha=2.1987 max_w=0.0073 top10_w=0.0731
+  t=  5 err=0.7673 alpha=2.4705 max_w=0.0093 top10_w=0.0929
+  t= 10 err=0.6316 alpha=3.1243 max_w=0.0260 top10_w=0.2003
+  t= 20 err=0.6634 alpha=2.9853 max_w=0.0682 top10_w=0.2957
+  t= 30 err=0.6190 alpha=3.1784 max_w=0.0574 top10_w=0.2773
+  t= 40 err=0.6683 alpha=2.9631 max_w=0.0441 top10_w=0.2550
+  t= 50 err=0.6452 alpha=3.0657 max_w=0.0601 top10_w=0.3511
+
+=== Q2(c) Boosting vs bagging with 25 / 50 / 100 learners (fresh fits, single core, timed) ===
+bagging  n= 25: train=1.0000 val=0.7625 test=0.7875 fit time=20.80s
+boosting n= 25: train=0.5042 val=0.3000 test=0.3000 fit time=6.85s
+bagging  n= 50: train=1.0000 val=0.8250 test=0.8000 fit time=42.27s
+boosting n= 50: train=0.9750 val=0.5250 test=0.5375 fit time=13.16s
+bagging  n=100: train=1.0000 val=0.8375 test=0.8125 fit time=83.50s
+boosting n=100: train=0.9833 val=0.5125 test=0.6375 fit time=25.45s
+
+Heaviest training face: train#228 (dataset idx 389), identity 38; max weight 0.0774 = 18.6x uniform 1/n.
+  misclassified by 43/50 weak learners; each learner outputs on average 8.1 of 40 classes on the training set.
+  round: weight-before, h_t(x), miss, alpha
+   t=  1 w=0.00417 pred= 0 miss=1 alpha=1.718
+   t=  2 w=0.00464 pred=38 miss=0 alpha=1.842
+   t=  3 w=0.00083 pred= 2 miss=1 alpha=1.989
+   t=  4 w=0.00096 pred= 3 miss=1 alpha=2.199
+   t=  5 w=0.00116 pred= 4 miss=1 alpha=2.471
+   t=  6 w=0.00147 pred=12 miss=1 alpha=3.019
+   t=  7 w=0.00219 pred=36 miss=1 alpha=3.798
+   t=  8 w=0.00457 pred=29 miss=1 alpha=4.177
+   t=  9 w=0.01191 pred= 0 miss=1 alpha=2.867
+   t= 10 w=0.01685 pred= 3 miss=1 alpha=3.124
+   t= 11 w=0.02601 pred= 8 miss=1 alpha=3.210
+   t= 12 w=0.04147 pred=12 miss=1 alpha=3.226
+   t= 13 w=0.06653 pred=38 miss=0 alpha=3.101
+   t= 14 w=0.00458 pred=16 miss=1 alpha=3.370
+   t= 15 w=0.00780 pred=20 miss=1 alpha=3.440
+   t= 20 w=0.06102 pred=38 miss=0 alpha=2.985
+   t= 28 w=0.05231 pred=38 miss=0 alpha=2.900
+   t= 30 w=0.00587 pred=36 miss=1 alpha=3.178
+   t= 36 w=0.07740 pred=38 miss=0 alpha=3.025
+   t= 38 w=0.00812 pred=38 miss=0 alpha=3.126
+   t= 40 w=0.00082 pred= 3 miss=1 alpha=2.963
+   t= 49 w=0.03102 pred=38 miss=0 alpha=2.852
+   t= 50 w=0.00252 pred=13 miss=1 alpha=3.066
+  learner predictions for this face (class: count): {0: 4, 1: 3, 2: 2, 3: 6, 4: 2, 8: 2, 12: 3, 13: 2, 14: 2, 16: 2, 17: 1, 20: 4, 22: 2, 24: 1, 29: 1, 34: 1, 35: 1, 36: 2, 38: 7, 39: 2}
+  final ensemble prediction 38 with q_true=0.134
+
+=== Q2(d) Frozen models on clean and masked test sets ===
+[clean] tree acc=0.5625 (mean max prob 0.990) | bagging B=50 acc=0.7875 (mean winning vote 0.398) | boosting acc=0.5375 (mean winning q 0.129)
+[masked] tree acc=0.2125 (mean max prob 1.000) | bagging B=50 acc=0.5375 (mean winning vote 0.251) | boosting acc=0.4250 (mean winning q 0.124)
+Fraction of split nodes testing masked pixels: bagging trees 0.079, boosting (alpha-weighted) 0.071; masked area = 0.0625 of the image
+Faces where bagging and boosting respond differently to masking: 13 candidates (6 bagging-survives, 7 boosting-survives)
+
+Example face: test#9 (dataset idx 41), identity 4 — boosting survives masking, bagging breaks
+   test_pos: 9
+   dataset_index: 41
+   true: 4
+   kind: boosting survives masking, bagging breaks
+   bag_vote_true_clean: 0.58
+   bag_vote_true_masked: 0.14
+   bag_pred_masked: 30
+   bag_win_vote_masked: 0.2
+   bag_distinct_preds_clean: 12
+   bag_distinct_preds_masked: 13
+   bag_frac_trees_changed: 0.72
+   bag_frac_paths_through_mask: 0.8
+   boost_q_true_clean: 0.13940786590649085
+   boost_q_true_masked: 0.13940786590649085
+   boost_pred_masked: 4
+   boost_win_q_masked: 0.13940786590649085
+   boost_alpha_frac_changed: 0.08844403621646897
+   boost_alpha_frac_paths_through_mask: 0.1869881343153827
+   boost_train_weight_on_true_identity: 0.011067722812450928
+
+Example face: test#14 (dataset idx 74), identity 7 — bagging survives masking, boosting breaks
+   test_pos: 14
+   dataset_index: 74
+   true: 7
+   kind: bagging survives masking, boosting breaks
+   bag_vote_true_clean: 0.52
+   bag_vote_true_masked: 0.26
+   bag_pred_masked: 7
+   bag_win_vote_masked: 0.26
+   bag_distinct_preds_clean: 12
+   bag_distinct_preds_masked: 16
+   bag_frac_trees_changed: 0.52
+   bag_frac_paths_through_mask: 0.52
+   boost_q_true_clean: 0.13525015052929173
+   boost_q_true_masked: 0.11251250900251829
+   boost_pred_masked: 3
+   boost_win_q_masked: 0.114411151924018
+   boost_alpha_frac_changed: 0.14961456457784
+   boost_alpha_frac_paths_through_mask: 0.20972577584215613
+   boost_train_weight_on_true_identity: 0.005164748686941047
+
+Q2 total time 231.2s

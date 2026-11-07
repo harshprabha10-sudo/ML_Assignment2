@@ -1,0 +1,98 @@
+{
+  "clean_bag_corrects_tree": [
+    {
+      "set": "clean",
+      "test_pos": 37,
+      "dataset_index": 184,
+      "true": 18,
+      "tree_pred": 35,
+      "tree_conf": 1.0,
+      "bag_pred": 18,
+      "bag_votes_true": 31,
+      "bag_top3": "18:31;2:4;22:3"
+    },
+    {
+      "set": "clean",
+      "test_pos": 9,
+      "dataset_index": 41,
+      "true": 4,
+      "tree_pred": 37,
+      "tree_conf": 1.0,
+      "bag_pred": 4,
+      "bag_votes_true": 29,
+      "bag_top3": "4:29;37:6;22:4"
+    }
+  ],
+  "clean_both_wrong": [
+    {
+      "set": "clean",
+      "test_pos": 50,
+      "dataset_index": 256,
+      "true": 25,
+      "tree_pred": 15,
+      "tree_conf": 1.0,
+      "bag_pred": 15,
+      "bag_votes_true": 3,
+      "bag_top3": "15:18;22:5;2:4"
+    },
+    {
+      "set": "clean",
+      "test_pos": 30,
+      "dataset_index": 155,
+      "true": 15,
+      "tree_pred": 6,
+      "tree_conf": 1.0,
+      "bag_pred": 23,
+      "bag_votes_true": 3,
+      "bag_top3": "23:17;16:4;15:3"
+    }
+  ],
+  "masked_bag_corrects_tree": [
+    {
+      "set": "masked",
+      "test_pos": 66,
+      "dataset_index": 338,
+      "true": 33,
+      "tree_pred": 35,
+      "tree_conf": 1.0,
+      "bag_pred": 33,
+      "bag_votes_true": 25,
+      "bag_top3": "33:25;13:7;30:3"
+    },
+    {
+      "set": "masked",
+      "test_pos": 52,
+      "dataset_index": 264,
+      "true": 26,
+      "tree_pred": 35,
+      "tree_conf": 1.0,
+      "bag_pred": 26,
+      "bag_votes_true": 20,
+      "bag_top3": "26:20;33:5;30:4"
+    }
+  ],
+  "masked_both_wrong": [
+    {
+      "set": "masked",
+      "test_pos": 13,
+      "dataset_index": 65,
+      "true": 6,
+      "tree_pred": 35,
+      "tree_conf": 1.0,
+      "bag_pred": 35,
+      "bag_votes_true": 9,
+      "bag_top3": "35:16;6:9;13:5"
+    },
+    {
+      "set": "masked",
+      "test_pos": 50,
+      "dataset_index": 256,
+      "true": 25,
+      "tree_pred": 15,
+      "tree_conf": 1.0,
+      "bag_pred": 15,
+      "bag_votes_true": 3,
+      "bag_top3": "15:13;13:7;35:6"
+    }
+  ]
+}
